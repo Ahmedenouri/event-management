@@ -1,0 +1,20 @@
+# Node modules (toujours à ignorer)
+node_modules/
+
+# Fichiers de logs
+*.log
+
+# Environnement local (clé API, configs locales)
+.env
+
+# Dossiers de build / production
+dist/
+build/
+
+# Système
+.DS_Store
+Thumbs.db
+
+# IDE (VS Code, WebStorm, etc.)
+.vscode/
+.idea/
