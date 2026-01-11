@@ -1,8 +1,13 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
-
 const PORT = 3000;
+
+const path = require("path");
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 
 
 
@@ -30,7 +35,8 @@ app.use("/tickets", ticketRoutes);
 
 // routes
 app.get("/", (req, res) => {
-  res.send("Bienvenue dans l'application de gestion d'événements 🎉");
+  //res.send("Bienvenue dans l'application de gestion d'événements ");
+  res.render('index')
 });
 
 
