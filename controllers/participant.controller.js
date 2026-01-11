@@ -13,6 +13,12 @@ const getAllParticipants = async (req, res, next) => {
 // POST /participants
 const createParticipant = async (req, res, next) => {
   try {
+    // Vérifier doublon email
+    const exists = await Participant.findOne({ email: req.body.email });
+    if (exists) {
+      return res.status(400).json({ message: "Email déjà utilisé" });
+    }
+
     const participant = new Participant(req.body);
     const savedParticipant = await participant.save();
     res.status(201).json(savedParticipant);
