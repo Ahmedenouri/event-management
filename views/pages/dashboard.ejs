@@ -1,8 +1,40 @@
 <%- include("../layout/header", { title: "Dashboard" }) %>
 
 <h1>Dashboard</h1>
-<p>Bienvenue admin 👋</p>
 
-<a href="/logout">Logout</a>
+<div class="cards-container">
+  <div class="card">
+    <h3>Total Événements</h3>
+    <p><%= totalEvents %></p>
+  </div>
+  <div class="card">
+    <h3>Total Participants</h3>
+    <p><%= totalParticipants %></p>
+  </div>
+  <div class="card">
+    <h3>Total Tickets</h3>
+    <p><%= totalTickets %></p>
+  </div>
+</div>
+
+<canvas id="participantsChart" width="400" height="200"></canvas>
+
+<script>
+const ctx = document.getElementById('participantsChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels:  JSON.stringify(eventNames),
+    datasets: [{
+      label: 'Participants par événement',
+      data:  JSON.stringify(participantCounts),
+      backgroundColor: 'rgba(54, 162, 235, 0.5)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: { scales: { y: { beginAtZero: true } } }
+});
+</script>
 
 <%- include("../layout/footer") %>
