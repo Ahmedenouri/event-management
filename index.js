@@ -1,5 +1,9 @@
 const express = require("express");
+const session = require("express-session");
+
+
 const app = express();
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const PORT = 3000;
 
@@ -17,6 +21,8 @@ const participantRoutes = require("./routes/participant.routes");
 const speakerRoutes = require("./routes/speaker.routes");
 const roomRoutes = require("./routes/room.routes");
 const ticketRoutes = require("./routes/ticket.routes");
+const authRoutes = require("./routes/auth.routes");
+const viewRoutes = require("./routes/view.routes");
 
 
 
@@ -29,6 +35,17 @@ app.use("/participants", participantRoutes);
 app.use("/speakers", speakerRoutes);
 app.use("/rooms", roomRoutes);
 app.use("/tickets", ticketRoutes);
+
+app.use(
+  session({
+    secret: "secret-key",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(authRoutes);
+app.use("/", viewRoutes);
 
 
 
