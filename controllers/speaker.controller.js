@@ -21,7 +21,35 @@ const createSpeaker = async (req, res, next) => {
   }
 };
 
+// PUT /speakers/:id
+const updateSpeaker = async (req, res, next) => {
+  try {
+    const updatedSpeaker = await Speaker.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!updatedSpeaker) return res.status(404).json({ message: "Conférencier non trouvé" });
+    res.json(updatedSpeaker);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// DELETE /speakers/:id
+const deleteSpeaker = async (req, res, next) => {
+  try {
+    const deletedSpeaker = await Speaker.findByIdAndDelete(req.params.id);
+    if (!deletedSpeaker) return res.status(404).json({ message: "Conférencier non trouvé" });
+    res.json({ message: "Conférencier supprimé avec succès" });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAllSpeakers,
   createSpeaker,
+  updateSpeaker,
+  deleteSpeaker,
 };
