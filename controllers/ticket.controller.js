@@ -27,6 +27,18 @@ const createTicket = async (req, res, next) => {
     const participant = await Participant.findById(participantId);
     if (!participant) return res.status(404).json({ message: "Participant non trouvé" });
 
+    // Empêcher billet en double
+    const existingTicket = await Ticket.findOne({
+      event: eventId,
+      participant: participantId,
+    });
+
+    if (existingTicket) {
+      return res
+        .status(400)
+        .json({ message: "Ce participant a déjà un billet" });
+    }
+
     // Créer le billet
     const ticket = new Ticket({
       event: eventId,
@@ -34,8 +46,13 @@ const createTicket = async (req, res, next) => {
       price: event.price,
     });
 
-    const savedTicket = await ticket.save();
-    res.status(201).json(savedTicket);
+    await ticket.save();
+
+    // Ajouter événement au participant
+    participant.events.push(eventId);
+    await participant.save();
+
+    res.status(201).json(ticket);
   } catch (err) {
     next(err);
   }

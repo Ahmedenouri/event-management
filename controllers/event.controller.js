@@ -32,9 +32,22 @@ const updateEvent = async (req, res, next) => {
 // DELETE /events/:id
 const deleteEvent = async (req, res, next) => {
   try {
-    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
-    if (!deletedEvent) return res.status(404).json({ message: "Événement non trouvé" });
-    res.json({ message: "Événement supprimé avec succès" });
+    const eventId = req.params.id;
+
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: "Événement introuvable" });
+    }
+
+    // Supprimer billets liés
+    await Ticket.deleteMany({ event: eventId });
+
+    // Supprimer événement
+    await event.deleteOne();
+
+    res.json({
+      message: "Événement et billets associés supprimés avec succès",
+    });
   } catch (err) {
     next(err);
   }
