@@ -1,0 +1,62 @@
+<%- include("../layout/header", { title: "Événements" }) %>
+
+<h1>Liste des Événements</h1>
+
+<form method="GET" action="/events">
+  <input
+    type="text"
+    name="search"
+    placeholder="Rechercher par titre"
+    value="<%= search %>"
+  />
+  <button type="submit">Rechercher</button>
+</form>
+
+<br />
+
+<table border="1" width="100%" cellpadding="10">
+  <thead>
+    <tr>
+      <th>
+        <a href="/events?sort=title&search=<%= search %>">Titre</a>
+      </th>
+      <th>
+        <a href="/events?sort=date&search=<%= search %>">Date</a>
+      </th>
+      <th>Salle</th>
+      <th>Conférencier</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% events.forEach(event => { %>
+      <tr>
+        <td><%= event.title %></td>
+        <td><%= event.date.toISOString().split("T")[0] %></td>
+        <td><%= event.location %></td>
+        <td><%= event.speaker %></td>
+        <td>
+          <a href="/events/details/<%= event._id %>">Voir</a> |
+          <a href="/events/edit/<%= event._id %>">Éditer</a> |
+          <a
+            href="/events/delete/<%= event._id %>"
+            onclick="return confirm('Supprimer cet événement ?')"
+          >Supprimer</a>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<br />
+
+<div>
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <a href="/events?page=<%= i %>&search=<%= search %>&sort=<%= sort %>">
+      [ <%= i %> ]
+    </a>
+  <% } %>
+</div>
+
+<%- include("../layout/footer") %>

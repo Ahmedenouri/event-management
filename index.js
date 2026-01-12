@@ -15,7 +15,7 @@ app.set("views", path.join(__dirname, "views"));
 
 
 
-const connectDB = require("./config/db");
+
 const eventRoutes = require("./routes/event.routes");
 const participantRoutes = require("./routes/participant.routes");
 const speakerRoutes = require("./routes/speaker.routes");
@@ -26,8 +26,7 @@ const viewRoutes = require("./routes/view.routes");
 
 
 
-
-// connexion DB
+const connectDB = require("./config/db");
 connectDB();
 
 app.use("/events", eventRoutes);

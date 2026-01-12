@@ -1,9 +1,39 @@
 const Event = require("../models/Event");
 
 // GET /events
-const getAllEvents = async (req, res) => {
-  const events = await Event.find();
-  res.json(events);
+const getAllEvents = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1; // page actuelle
+    const limit = 5; // événements par page
+    const skip = (page - 1) * limit;
+
+    const search = req.query.search || "";
+    const sort = req.query.sort || "date";
+
+    // filtre recherche
+    const filter = {
+      title: { $regex: search, $options: "i" },
+    };
+
+    // données
+    const events = await Event.find(filter)
+      .sort({ [sort]: 1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalEvents = await Event.countDocuments(filter);
+    const totalPages = Math.ceil(totalEvents / limit);
+
+    res.render("pages/events", {
+      events,
+      currentPage: page,
+      totalPages,
+      search,
+      sort,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 // POST /events
